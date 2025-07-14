@@ -1,6 +1,7 @@
 package org.example.model;
 
 import javax.persistence.*;
+import java.awt.*;
 import java.util.Objects;
 @Entity
 @Table(name = "RESTAURANTE")
@@ -38,6 +39,7 @@ public class Restaurante {
     public void setNome(String nome) {
         this.nome = nome;
     }
+
 
     @Override
     public boolean equals(Object o) {
