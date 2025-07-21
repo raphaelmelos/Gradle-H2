@@ -1,147 +1,165 @@
 package org.example.view;
 
+import antlr.MismatchedCharException;
 import org.example.controller.FuncionarioController;
+import org.example.controller.RestaraunteController;
+import org.example.controller.VotacaoController;
 import org.example.exception.AplicacaoException;
 import org.example.model.Funcionario;
 import org.example.model.Restaurante;
 import org.example.util.TecladoUtil;
-import org.hibernate.loader.collection.OneToManyJoinWalker;
 
+import javax.sound.midi.Soundbank;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class Sistema {
-
-    private static FuncionarioController controller = new FuncionarioController();
-    private static List<Funcionario> funcionarios = new ArrayList<>();
-    private static List<Restaurante> restaurantes = new ArrayList<>();
+    private static final FuncionarioController controllerFun = new FuncionarioController();
+    private static final RestaraunteController controllerRes = new RestaraunteController();
+    private static final VotacaoController controllerVot = new VotacaoController();
+    private static final List<Funcionario> funcionarios = new ArrayList<>();
+    private static final List<Restaurante> restaurantes = new ArrayList<>();
+    private static final VotacaoController votacaoController = new VotacaoController();
     private static boolean sair = false;
+    Funcionario funcionario = new Funcionario();
+
+    public static void main(String[] args) throws AplicacaoException {
 
 
-
-    Funcionario funcionario1 = new Funcionario(1,"raphael");
-
-    public static void main(String[] args) {
-            registrardados();
-            while (!sair) {
-                menu();
-            int opcao = TecladoUtil.lerInteiro("Informa uma Opcao:");
+        while (!sair) {
+            menu();
+            int opcao = TecladoUtil.lerInteiro("Informe uma opçao:");
             executaAcao(opcao);
-            }
-
-        }
-
-        private static void registrardados() {
-            // Criando lista de funcionários
-
-            funcionarios.add(new Funcionario(1, "Raphael"));
-            funcionarios.add(new Funcionario(2, "Arthur"));
-            funcionarios.add(new Funcionario(3, "Pedro"));
-            funcionarios.add(new Funcionario(4, "Maria"));
-            funcionarios.add(new Funcionario(5, "Dafine"));
-            System.out.println("Funcionarios registrados!");
-
-            // Criando lista de restaurantes
-            restaurantes.add(new Restaurante(1, "Churrascaria do Ze"));
-            restaurantes.add(new Restaurante(2, "Pizza Do Sul"));
-            restaurantes.add(new Restaurante(3, "Rafa Sushi"));
-            restaurantes.add(new Restaurante(4, "Parrila"));
-            System.out.println("Restaurantes registrados!");
-
-            System.out.println("Total de funcionarios: " + funcionarios.size());
-            System.out.println("Total de restaurantes: " + restaurantes.size());
-
-
-        }
-
-
-
-
-        // Mostrar restaurantes
-        private static void listarRestaurantes() throws  AplicacaoException{
-        System.out.println("\nRestaurantes disponiveis:");
-        for (Restaurante r: restaurantes) {
-            System.out.println(r);
-             }
-        }
-        private static void listarFuncionarios() throws  AplicacaoException{
-            System.out.println("Lista de funcionarios");
-            for (Funcionario f: funcionarios){
-                System.out.println(f.getNome());
-            }
-        }
-    // Escolher restaurante
-    private static void votar ()throws  AplicacaoException {
-        System.out.print("\nQual restaurante quer escolher? (digite o ID): ");
-        listarRestaurantes();
-        int idRestaurante = TecladoUtil.lerInteiro("Iforme a opção");
-        Restaurante restauranteSelecionado = null;
-
-        for (Restaurante r : restaurantes) {
-            if (r.getId().equals(idRestaurante)) {
-                restauranteSelecionado = r;
-                break;
-            }
-        }
-
-        if (restauranteSelecionado == null) {
-            System.out.println("Restaurante não encontrado!");
-        } else {
-            System.out.println("Voce votou no restaurante: " + restauranteSelecionado.getNome());
         }
     }
 
-    private static void executaAcao( int opcao) {
+
+    /* private static void registrarDados() throws AplicacaoException {
+
+         funcionarios.add(new Funcionario(2, "Arthur"));
+
+
+         restaurantes.add(new Restaurante(1, "Churrascaria do Ze"));
+         restaurantes.add(new Restaurante(2, "Pizza Do Sul"));
+         restaurantes.add(new Restaurante(3, "Rafa Sushi"));
+         restaurantes.add(new Restaurante(4, "Parrila"));
+
+         System.out.println("Funcionarios e restaurantes registrados!");
+         System.out.println("Total de funcionarios: " + funcionarios.size());
+         System.out.println("Total de restaurantes: " + restaurantes.size());
+     }
+
+     //metodo para listar todos os restaurantes
+     private static void listarRestaurantes() {
+         System.out.println("\nRestaurantes disponíveis:");
+         for (Restaurante r : restaurantes) {
+             System.out.println(r);
+         }
+     }
+     //metodo para listar todos os funcionários
+     /*private static void listarFuncionarios() throws AplicacaoException{
+         System.out.println("\nFuncionários cadastrados:");
+         //String nome = TecladoUtil.lerString("Informe o nome da Cidade");
+         //System.out.println(controllerFun.buscar(nome));
+     }
+     */
+    //metodo para buscar funcionário. cria um for Funcionário que percorre uma lista de funcionários
+    private static Funcionario buscarFuncionarioPorId(int idFuncionario) {
+        for (Funcionario f : funcionarios) {
+            if (f.getId().equals(idFuncionario)) {
+                return f;
+            }
+        }
+        return null;
+    }
+
+    private static Restaurante buscarRestaurantePorId(int idRestaurante) {
+        for (Restaurante r : restaurantes) {
+            if (r.getId().equals(idRestaurante)) {
+                return r;
+            }
+        }
+        return null;
+    }
+
+    private static void votar() throws AplicacaoException {
+        try {
+            //listarFuncionarios();
+
+            int idFuncionario = TecladoUtil.lerInteiro("Digite o ID do funcionário:");
+            Funcionario funcionario = buscarFuncionarioPorId(idFuncionario);
+
+            if (funcionario == null) {
+                String nome = TecladoUtil.lerString("Digite seu nome");
+                controllerFun.inserir(nome);
+            }
+
+            controllerRes.buscar();
+            int idRestaurante = TecladoUtil.lerInteiro("Digite o ID do restaurante:");
+            Restaurante restaurante = buscarRestaurantePorId(idRestaurante);
+
+            if (restaurante == null) {
+                String nome = TecladoUtil.lerString("Digite o nome do Restaurante");
+                controllerRes.inserir(nome);
+            }
+            votacaoController.registrarVoto(funcionario, restaurante);
+
+            System.out.println("Voto registrado com sucesso!");
+        } catch (NumberFormatException e) {
+            System.out.println("Entrada inválida! Digite apenas números nos campos de ID");
+        } catch (AplicacaoException e) {
+            System.out.println(" Erro na aplicação: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Erro inesperado: " + e.getMessage());
+        }
+
+    }
+
+
+    private static void executaAcao(int opcao) {
         try {
             switch (opcao) {
                 case 1:
-                    // Escolher funcionário
-                    System.out.print("\nDigite o ID do funcionário: ");
-                    int idFuncionario = TecladoUtil.lerInteiro("Informe a opção: ");
-                    Funcionario funcionarioSelecionado = null;
-
-
-                    for (Funcionario f : funcionarios) {
-                        if (f.getId().equals(idFuncionario)) {
-                            funcionarioSelecionado = f;
-                            break;
-                        }
-                    }
-                    if (funcionarioSelecionado == null) {
-                        System.out.println("Funcionario não encontrado!");
-                        return;
-                    }
-                    System.out.println("Olá, " + funcionarioSelecionado.getNome() + "!");
-
                     votar();
-
-                    System.out.println("Votar");
                     break;
                 case 2:
-                    listarFuncionarios();
-                    System.out.println("Listar funcionarios");
+                    buscarFuncionarios();
                     break;
                 case 3:
                     listarRestaurantes();
                     break;
                 case 4:
+                    votacaoController.apurarVotacaoDoDia();
+                    break;
+                case 5:
                     sair = true;
                     break;
                 default:
-                    System.out.println("Opcao invalida!!");
-                    break;
+                    System.out.println("Opcao invalida!");
             }
         } catch (AplicacaoException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Erro: " + e.getMessage());
         }
     }
 
-    private static void menu(){
-        System.out.println("\nBem vindo ao menu!");
+    private static void buscarFuncionarios() throws AplicacaoException {
+        System.out.println(controllerFun.buscar());
+    }
+
+    private static void listarRestaurantes() throws AplicacaoException {
+        System.out.println(controllerRes.buscar());
+    }
+    /*private static void votoRegistrado(){
+        System.out.println(controllerVot.registrarVoto());
+    }
+    */
+    private static void menu() {
+        System.out.println("\n Menu Principal:");
         System.out.println("1. Votar");
         System.out.println("2. Listar Funcionarios");
         System.out.println("3. Listar Restaurantes");
+        System.out.println("4. Apurar votacao do dia");
+        System.out.println("5. Sair");
     }
 
 }

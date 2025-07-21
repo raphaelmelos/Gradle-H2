@@ -4,6 +4,8 @@ import org.example.model.Funcionario;
 
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import java.util.List;
 
 public class FuncionarioRepository {
 
@@ -15,5 +17,13 @@ public class FuncionarioRepository {
             this.em.getTransaction().begin();
             this.em.merge(funcionario);
             this.em.getTransaction().commit();
+        }
+
+        //public Funcionario buscar(Integer id) {return  this.em.find(Funcionario.class, id);}
+
+        public  List<Funcionario> buscar() {
+            TypedQuery<Funcionario> buscarTodosQuery =
+                    this.em.createQuery("SELECT f FROM Funcionario f", Funcionario.class);
+            return buscarTodosQuery.getResultList();
         }
 }
