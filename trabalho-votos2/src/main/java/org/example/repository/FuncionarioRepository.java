@@ -7,6 +7,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
+/**
+ * Classe utilizada para gerar os metodos com relação ao banco de dados.
+ */
+
 public class FuncionarioRepository {
 
         private EntityManager em;

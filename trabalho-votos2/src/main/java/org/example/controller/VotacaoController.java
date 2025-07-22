@@ -3,6 +3,7 @@ package org.example.controller;
 import org.example.exception.AplicacaoException;
 import org.example.model.Funcionario;
 import org.example.model.Restaurante;
+import org.example.model.Voto;
 import org.example.repository.RestauranteRepository;
 import org.example.repository.VotoRepository;
 
@@ -37,7 +38,7 @@ public class VotacaoController {
         if (votosHoje.containsKey(funcionario)) {
             throw new AplicacaoException("Funcionário já votou hoje!");
         }
-
+   ///    votoRepository.inserir(new Voto());
         votosHoje.put(funcionario, restaurante);
     }
 
@@ -55,7 +56,7 @@ public class VotacaoController {
             contagem.put(r, contagem.getOrDefault(r, 0) + 1);
         }
 
-        System.out.println("\n📊 Resultado da votação de hoje:");
+        System.out.println("\nResultado da votação de hoje:");
         for (Map.Entry<Restaurante, Integer> entry : contagem.entrySet()) {
             System.out.println(entry.getKey().getNome() + ": " + entry.getValue() + " voto(s)");
         }

@@ -2,6 +2,12 @@ package org.example.util;
 
 import java.util.Scanner;
 
+/**
+ * Classe usada para instanciar o teclado.
+ * recebe como @param String mensagem
+ *
+ */
+
 public class TecladoUtil {
     public static String lerString(String mensagem) {
         return  inicializaTeclado(mensagem).nextLine();

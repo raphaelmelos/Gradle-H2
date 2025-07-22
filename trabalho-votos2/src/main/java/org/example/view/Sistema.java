@@ -82,6 +82,13 @@ public class Sistema {
         return null;
     }
 
+    /**
+     * Método criado para chamar o voto.
+     * Recebe @param um int idFuncionário.
+     * Busca no banco de dados chama o metodo de comparaçao para verificar funcionário existente.
+     *
+     * @throws AplicacaoException tratamento de execaoo para lidar com caracteres incorretos dentro do método.
+     */
     private static void votar() throws AplicacaoException {
         try {
             //listarFuncionarios();
@@ -102,20 +109,23 @@ public class Sistema {
                 String nome = TecladoUtil.lerString("Digite o nome do Restaurante");
                 controllerRes.inserir(nome);
             }
-            votacaoController.registrarVoto(funcionario, restaurante);
+            controllerVot.registrarVoto(funcionario, restaurante);
 
             System.out.println("Voto registrado com sucesso!");
         } catch (NumberFormatException e) {
             System.out.println("Entrada inválida! Digite apenas números nos campos de ID");
         } catch (AplicacaoException e) {
-            System.out.println(" Erro na aplicação: " + e.getMessage());
+            System.out.println("Erro no sistema: " + e.getMessage());
         } catch (Exception e) {
             System.out.println("Erro inesperado: " + e.getMessage());
         }
 
     }
 
-
+    /**
+     * Switch case para definir opcao
+     * @param opcao usado para definir opção do switch case
+     */
     private static void executaAcao(int opcao) {
         try {
             switch (opcao) {
@@ -129,10 +139,11 @@ public class Sistema {
                     listarRestaurantes();
                     break;
                 case 4:
-                    votacaoController.apurarVotacaoDoDia();
+                    controllerVot.apurarVotacaoDoDia();
                     break;
                 case 5:
                     sair = true;
+                    System.out.println("Você encerrou o sistema de votação. Obrigado!");
                     break;
                 default:
                     System.out.println("Opcao invalida!");
@@ -146,6 +157,10 @@ public class Sistema {
         System.out.println(controllerFun.buscar());
     }
 
+    /**
+     * metodo para listar restaurantes inseridos no banco de dados.
+     * Localizados na classe RestauranteRepository e RestauranteControlle
+     */
     private static void listarRestaurantes() throws AplicacaoException {
         System.out.println(controllerRes.buscar());
     }
